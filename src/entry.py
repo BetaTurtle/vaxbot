@@ -71,7 +71,7 @@ flow = {
     "/start": ["Please choose your age group", [["Under 18", "Above 18"]]],
     "💉 Start over": ["Please choose your age group", [["Under 18", "Above 18"]]],
     "Under 18": [
-        "Under 18 not eligible for vaccination. Would you like to start again?",
+        "As per the Govt of India guidelines, patients under 18 years of age are not eligible for vaccination as of now. We will keep the bot updated if there are any changes to this policy.",
         [["💉 Start over"], ["🏁 End session"]],
     ],
     "Above 18": ["Select your gender", [["🙋🏻‍♂️ Male", "🙋🏻‍♀️ Female"]]],
