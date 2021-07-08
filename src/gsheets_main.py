@@ -12,8 +12,8 @@ SAMPLE_SPREADSHEET_ID = '1-gvqOJJVd7SxsSd4asqMujl0JXgdQj-f6_KAGLTtinE'
 SAMPLE_RANGE_NAME = 'VaxBot'
 
 def upload_to_sheets(row_data):
-    print("uploading this")
-    print(row_data)
+    # print("uploading this")
+    # print(row_data)
     token = os.environ["SHEETS_TOKEN"]
     creds = Credentials.from_authorized_user_info(json.loads(token), SCOPES)
     creds.refresh(Request())
