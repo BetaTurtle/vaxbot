@@ -230,7 +230,7 @@ def entry(bot, update):
     try:
         # res = bot.send_message(chat_id="-1001164870268", text=json.dumps(update.to_dict(), indent=2))
         # print(json.dumps(update.to_dict(), indent=2))
-        logging.info(update)
+        # logging.info(update)
         pass
     except Exception as e:
         logging.error(e)
