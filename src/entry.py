@@ -34,7 +34,7 @@ genquerylist = [
     ["Can I eat non veg food after vaccination? Are there any food restrictions?"],
     ["Are there any restrictions on alcohol intake before or after vaccination?"],
     ["I am planning on traveling to a foreign country. What vaccine should I get?"],
-    ["Is one vaccine better than others? Do vaccines protect against Delta variant?"],
+    ["Is one vaccine better than others? Do vaccines protect against Delta and Lambda variant?"],
     ["Can I take doses of two different vaccines? Is vaccine mixing safe?"],
     ["Can I get revaccinated with a completely different vaccine?"],
     ["◀️ Back"],
@@ -165,15 +165,14 @@ WHO is continuously reviewing and approving new vaccines, so you can get the mos
 https://tinyurl.com/5annk4ux""",
         genquerylist,
     ],
-    "Is one vaccine better than others? Do vaccines protect against Delta variant?": [
-        """All the vaccines approved for use in India are proven to be effective in preventing symptomatic infection and reducing chances of death due to covid infection. They have all been shown to be effective against the Delta variant as well.
+    "Is one vaccine better than others? Do vaccines protect against Delta and Lambda variant?": [
+        """All the vaccines approved for use in India are proven to be effective in preventing symptomatic infection and reducing chances of death due to covid infection. They have all been shown to be effective against the Delta and Lambda variants as well.
 One vaccine might be technically superior to another, but practically their purpose is the same. The best course of action is to get vaccinated as soon as one is eligible and vaccination slots are available.""",
         genquerylist,
     ],
     "Can I get revaccinated with a completely different vaccine?": [
-        """There have been a few trials of mixing vaccines.
-The studies have largely focused on taking a second dose of mRNA vaccine like Pfizer or Moderna after taking an initial dose of other vaccines, largely Oxford Astra-Zeneca. It is generally safe to take two doses of different vaccines, like for example first dose of Oxford Astra-Zeneca and second dose of Moderna. 
-However, any such mixing of the vaccine should be done after taking the input of a medical professional.""",
+        """As per current scientific knowledge, people who have previously received a vector based vaccine (like Covishield) or an inactivated vaccine (like Covaxin) can get revaccinated with an mRNA vaccine (like Pfizer or Moderna).
+Getting vaccinated again with another vector based vaccine has not been investigated.""",
         genquerylist,
     ],
     "Can I take doses of two different vaccines? Is vaccine mixing safe?": [
@@ -203,7 +202,8 @@ If you want to personally check the response of your body, you can get an antibo
     "I am fully vaccinated. Does this mean that I cannot get covid anymore?": [
         """No. Definitely not.
 Vaccines are proven to reduce symptomatic infection and death, but this does not mean that you cannot get covid infection after getting vaccinated.
-You have to continue wearing masks and following "covid-appropriate-behavioral practices" till the time that this pandemic is over.""",
+You have to continue wearing masks and following "covid-appropriate-behavioral practices" till the time that this pandemic is over.
+For more information on Covid Appropriate Behavior visit https://www.mohfw.gov.in/pdf/Illustrativeguidelineupdate.pdf""",
         postvacquery,
     ],
     "🏁 End session": [
@@ -259,6 +259,7 @@ def entry(bot, update):
             bot.sendMessage(
                 chat_id=chat_id,
                 text=flow[text][0],
+                reply_to_message_id=update.message.message_id,
                 reply_markup=reply_markup,
             )
         else:
