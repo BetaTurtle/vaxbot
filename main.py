@@ -60,7 +60,7 @@ def main():
             logging.info("uploading pending stuff")
             upload_to_sheets(user_log)
             sleep(5)
-            sys.exit('End program with error')
+            sys.exit("End program with error")
         if int(time()) - start_time > LIFESPAN:
             logging.info("uploading pending stuff")
             upload_to_sheets(user_log)
