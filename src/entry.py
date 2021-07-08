@@ -5,6 +5,7 @@ from telegram import (
 )
 from pytz import timezone
 from .gsheets_main import upload_to_sheets
+
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
     level=logging.INFO,
@@ -34,7 +35,9 @@ genquerylist = [
     ["Can I eat non veg food after vaccination? Are there any food restrictions?"],
     ["Are there any restrictions on alcohol intake before or after vaccination?"],
     ["I am planning on traveling to a foreign country. What vaccine should I get?"],
-    ["Is one vaccine better than others? Do vaccines protect against Delta and Lambda variant?"],
+    [
+        "Is one vaccine better than others? Do vaccines protect against Delta and Lambda variant?"
+    ],
     ["Can I take doses of two different vaccines? Is vaccine mixing safe?"],
     ["Can I get revaccinated with a completely different vaccine?"],
     ["◀️ Back"],
@@ -207,24 +210,27 @@ For more information on Covid Appropriate Behavior visit https://www.mohfw.gov.i
         postvacquery,
     ],
     "🏁 End session": [
-        """Thank you for using @cov_vax_bot, a covid19india.org initiative.
-Send /start to start again.
+        """Thank you for using @covid19_vax_bot, a covid19india.org initiative.
+
 To book a vaccination appointment, or to download your vaccination certificate, visit https://www.cowin.gov.in/
 For more information on coronavirus vaccines and the global fight against covid, visit https://bit.ly/2UqgXtm
 For up-to-date statistics on covid-19 in India, visit https://www.covid19india.org
 Remember to stay safe, wear masks and most importantly,
 get vaccinated!""",
-        0,
+        [["💉 Start over"]],
     ],
 }
 
+
 def getISTTime(utc_time):
     format = "%Y-%m-%d %H:%M:%S"
-    now_asia = utc_time.astimezone(timezone('Asia/Kolkata'))
+    now_asia = utc_time.astimezone(timezone("Asia/Kolkata"))
     return now_asia.strftime(format)
 
 
 user_log = []
+
+
 def entry(bot, update):
     global user_log
     try:
@@ -239,10 +245,18 @@ def entry(bot, update):
         chat_id = update.message.chat_id
         text = update.message.text
         # time, user_id, first_name, username, text
-        user_log.append([getISTTime(update.message.date), chat_id, update.message.from_user.first_name, update.message.from_user.username, text])
+        user_log.append(
+            [
+                getISTTime(update.message.date),
+                chat_id,
+                update.message.from_user.first_name,
+                update.message.from_user.username,
+                text,
+            ]
+        )
         if len(user_log) > 20:
             upload_to_sheets(user_log)
-            user_log=[]
+            user_log = []
         if update.message.text == "/start":
             bot.sendMessage(
                 chat_id=chat_id,
@@ -264,4 +278,3 @@ def entry(bot, update):
             )
         else:
             logging.error("Unknown reply")
-
