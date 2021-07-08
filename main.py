@@ -9,6 +9,7 @@ import os
 from time import time
 from src.entry import entry, user_log
 from src.gsheets_main import upload_to_sheets
+import sys
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
@@ -53,10 +54,13 @@ def main():
             logging.error(update)
             # The user has removed or blocked the bot.
             # update_id += 1
-        # except Exception as e:
-        #     logging.error("Generic Error")
-        #     logging.error(e)
-        #     sleep(5)
+        except Exception as e:
+            logging.error("Generic Error")
+            logging.error(e)
+            logging.info("uploading pending stuff")
+            upload_to_sheets(user_log)
+            sleep(5)
+            sys.exit('End program with error')
         if int(time()) - start_time > LIFESPAN:
             logging.info("uploading pending stuff")
             upload_to_sheets(user_log)
