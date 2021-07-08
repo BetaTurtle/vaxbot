@@ -10,7 +10,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1-gvqOJJVd7SxsSd4asqMujl0JXgdQj-f6_KAGLTtinE'
-SAMPLE_RANGE_NAME = 'Sheet1!A1:E'
+SAMPLE_RANGE_NAME = 'VaxBot'
 
 def main():
     """Shows basic usage of the Sheets API.
@@ -28,7 +28,7 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                'client_secret.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
@@ -40,6 +40,7 @@ def main():
         [
             1,2,3,4,5,6,7,8,"asdf"
         ],
+        ["absc", 1, 3, 65,"sfg", 42],
         # Additional rows ...
     ]
     body = {

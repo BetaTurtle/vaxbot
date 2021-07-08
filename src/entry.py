@@ -1,12 +1,10 @@
-import json
 import logging
 from telegram import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
 )
-
+from pytz import timezone
+from .gsheets_main import upload_to_sheets
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
     level=logging.INFO,
@@ -92,7 +90,7 @@ flow = {
         mainmenuquery,
     ],
     "🩸 Can I get vaccinated while having periods?": [
-        "Yes. There is no contraindication to getting vaccinated during menstrual periods. However if you have a choice, it is better to get vaccinated about 5-7 days after periods as hormone levels will be stable at that point. ",
+        "Yes. There is no restriction to getting vaccinated during menstrual periods. However if you have a choice, it is better to get vaccinated about 5-7 days after periods as hormone levels will be stable at that point. ",
         femalequery,
     ],
     "🤰🏻 I am pregnant. Can I get vaccinated?": [
@@ -112,7 +110,7 @@ flow = {
         eligiblelist,
     ],
     "I was previously infected with covid 19. When am I eligible to take the vaccine?": [
-        "Get vaccinated 90 days after recovering from covid infection. Date of recovery is considered to be date of discharge for hospitalized patients. For patients who have been treated at home, consider 104 days from the date of diagnosis (as typical course of disease is 14 days).",
+        "Get vaccinated 90 days after recovering from covid infection. Date of recovery is considered to be date of discharge for hospitalized patients. For patients who have been treated at home, take the vaccine 104 days from the date of diagnosis. (14 days is the typical disease cycle + 90 days post recovery)",
         eligiblelist,
     ],
     "I have diabetes, blood pressure or asthma. Can I take the vaccine?": [
@@ -220,8 +218,15 @@ get vaccinated!""",
     ],
 }
 
+def getISTTime(utc_time):
+    format = "%Y-%m-%d %H:%M:%S"
+    now_asia = utc_time.astimezone(timezone('Asia/Kolkata'))
+    return now_asia.strftime(format)
 
+
+user_log = []
 def entry(bot, update):
+    global user_log
     try:
         # res = bot.send_message(chat_id="-1001164870268", text=json.dumps(update.to_dict(), indent=2))
         # print(json.dumps(update.to_dict(), indent=2))
@@ -233,6 +238,13 @@ def entry(bot, update):
     if update.message and update.message.text:
         chat_id = update.message.chat_id
         text = update.message.text
+        # time, user_id, first_name, username, text
+        user_log.append([getISTTime(update.message.date), chat_id, update.message.from_user.first_name, update.message.from_user.username, text])
+        if len(user_log) > 20:
+            upload_to_sheets(user_log)
+            user_log=[]
+        else:
+            logging.info(user_log)
         if update.message.text == "/start":
             bot.sendMessage(
                 chat_id=chat_id,
@@ -254,56 +266,3 @@ def entry(bot, update):
         else:
             logging.error("Unknown reply")
 
-        # # bot.send_message(chat_id=chat_id, text="Hello")
-        # ans_list = [
-        #     ["Should I get any blood tests before or after getting vaccinated?"],
-        #     ["Will I test positive for covid after vaccination?"],
-        #     [
-        #         "How can I be sure that the vaccine I have received is real and that I am not being given a fake vaccine?"
-        #     ],
-        #     ["How long will vaccines protect me from covid infection?"],
-        #     [
-        #         "Are there any restrictions on what food I can eat after getting vaccinated? Can I eat non veg food after vaccination?"
-        #     ],
-        #     [
-        #         "Are there any restrictions on alcohol intake before or after vaccination?"
-        #     ],
-        #     [
-        #         "I am planning on traveling to a foreign country. What vaccine should I get?"
-        #     ],
-        #     [
-        #         "Is there some vaccine that does not work against the Delta variant? Is one vaccine better than the others?"
-        #     ],
-        #     [
-        #         "Can I take doses of two different vaccines? Can I get revaccinated with a completely different vaccine?"
-        #     ],
-        # ]
-        # bot.sendMessage(
-        #     chat_id=chat_id,
-        #     text="Pick from this",
-        #     # reply_markup=ans_list,
-        #     reply_markup=ReplyKeyboardMarkup(keyboard=ans_list, one_time_keyboard=True),
-        # )
-
-        # InlineKeyboardMarkup([
-        #     [InlineKeyboardButton("Should I get any blood tests before\n or after getting vaccinated?", callback_data ="asdf")],
-        #     [InlineKeyboardButton("Will I test positive for covid \nafter vaccination?", callback_data ="asd")],
-        #     [InlineKeyboardButton("How can I be sure that the \nvaccine I have received is real \nand that I am not being given a fake vaccine?", callback_data ="asdff")],
-        #     [InlineKeyboardButton("How long will vaccines protect \nme from covid infection?", callback_data ="asd3f")],
-        #     [InlineKeyboardButton("Are there any restrictions on what food I can \neat after getting vaccinated? \nCan I eat non veg food after vaccination?", callback_data ="asdfbds")],
-        #     [InlineKeyboardButton("Are there any restrictions\n on alcohol intake \nbefore or after vaccination?", callback_data ="asdfaw")],
-        #     [InlineKeyboardButton("I am planning on traveling\n to a foreign country.\n What vaccine should I get?", callback_data ="ashddf")],
-        #     [InlineKeyboardButton("Is there some vaccine that\n does not work against\n the Delta variant? Is one vaccine better than the others?", callback_data ="asaadf")],
-        #     [InlineKeyboardButton("Can I take doses of two different\n vaccines? Can I get revaccinated\n with a completely different vaccine?", callback_data ="asdbvf")],
-
-        # ])
-
-        # ["Should I get any blood tests before or after getting vaccinated?"],
-        # ["Will I test positive for covid after vaccination?"],
-        # ["How can I be sure that the vaccine I have received is real and that I am not being given a fake vaccine?"],
-        # ["How long will vaccines protect me from covid infection?"],
-        # ["Are there any restrictions on what food I can eat after getting vaccinated? Can I eat non veg food after vaccination?"],
-        # ["Are there any restrictions on alcohol intake before or after vaccination?"],
-        # ["I am planning on traveling to a foreign country. What vaccine should I get?"],
-        # ["Is there some vaccine that does not work against the Delta variant? Is one vaccine better than the others?"],
-        # ["Can I take doses of two different vaccines? Can I get revaccinated with a completely different vaccine?"]
