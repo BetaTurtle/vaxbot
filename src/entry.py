@@ -243,8 +243,6 @@ def entry(bot, update):
         if len(user_log) > 20:
             upload_to_sheets(user_log)
             user_log=[]
-        else:
-            logging.info(user_log)
         if update.message.text == "/start":
             bot.sendMessage(
                 chat_id=chat_id,
