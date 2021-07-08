@@ -216,7 +216,11 @@ To book a vaccination appointment, or to download your vaccination certificate, 
 For more information on coronavirus vaccines and the global fight against covid, visit https://bit.ly/2UqgXtm
 For up-to-date statistics on covid-19 in India, visit https://www.covid19india.org
 Remember to stay safe, wear masks and most importantly,
-get vaccinated!""",
+get vaccinated!
+
+Please share your feedback regarding this bot using this form: https://forms.gle/nBdbr58xt8Ba2ajY7
+
+""",
         [["💉 Start over"]],
     ],
 }
