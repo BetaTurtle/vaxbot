@@ -248,7 +248,7 @@ def entry(bot, update):
     if update.message and update.message.text:
         chat_id = update.message.chat_id
         text = update.message.text
-        # time, user_id, first_name, username, text
+        # time, user_id, first_name, username, text, message_id
         user_log.append(
             [
                 getISTTime(update.message.date),
@@ -256,6 +256,7 @@ def entry(bot, update):
                 update.message.from_user.first_name,
                 update.message.from_user.username,
                 text,
+                update.message.message_id,
             ]
         )
         if len(user_log) > 20:
