@@ -15,13 +15,16 @@ def upload_to_sheets(row_data):
     # print("uploading this")
     # print(row_data)
     token = os.environ["SHEETS_TOKEN"]
-    creds = Credentials.from_authorized_user_info(json.loads(token), SCOPES)
-    creds.refresh(Request())
-    service = build('sheets', 'v4', credentials=creds)
-    values = row_data
-    body = {'values': values}
-    sheet = service.spreadsheets()
-    result = sheet.values().append(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                   range=SAMPLE_RANGE_NAME, valueInputOption="RAW", body=body).execute()
-    print(result)
-
+    try:
+        creds = Credentials.from_authorized_user_info(json.loads(token), SCOPES)
+        creds.refresh(Request())
+        service = build('sheets', 'v4', credentials=creds)
+        values = row_data
+        body = {'values': values}
+        sheet = service.spreadsheets()
+        result = sheet.values().append(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                       range=SAMPLE_RANGE_NAME, valueInputOption="RAW", body=body).execute()
+        print(result)
+    except Exception as e:
+        print("gsheets exception")
+        print(e)
